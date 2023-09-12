@@ -11,12 +11,27 @@ import {
   Title,
   TitlesWrapper,
 } from './ContactList.styled';
+import { useDispatch, useSelector } from 'react-redux';
+import { selectContacts, selectFilter } from 'redux/selectors';
+import { removeContact } from 'redux/contacts/slice';
 
-export const ContactList = ({ filter, newList, removeContact }) => {
+export const ContactList = () => {
+  const dispatch = useDispatch();
+  const contacts = useSelector(selectContacts);
+  const filter = useSelector(selectFilter);
+
   const noContactsMessage =
-    filter && newList.length === 0
+    filter && contacts.length === 0
       ? 'No contact with this name'
       : "There are no entries in your phone book yet. It's time to add your first contact";
+
+  const onRemoveContact = contactId => {
+    dispatch(removeContact(contactId));
+  };
+
+  const newList = contacts.filter(contact =>
+    contact.name.toLowerCase().includes(filter)
+  );
 
   return (
     <>
@@ -26,7 +41,7 @@ export const ContactList = ({ filter, newList, removeContact }) => {
         <Title>Number</Title>
       </TitlesWrapper>
       <LineWithShadow />
-      {newList.length > 0 ? (
+      {contacts.length > 0 ? (
         <List>
           {newList.map(contact => {
             return (
@@ -34,7 +49,7 @@ export const ContactList = ({ filter, newList, removeContact }) => {
                 <BsPersonCircle size={21} color="#fff" />
                 <Name>{contact.name}</Name>
                 <Number>{contact.number}</Number>
-                <Button onClick={() => removeContact(contact.id)}>
+                <Button onClick={() => onRemoveContact(contact.id)}>
                   <FiTrash size={21} />
                 </Button>
               </Item>
@@ -47,5 +62,3 @@ export const ContactList = ({ filter, newList, removeContact }) => {
     </>
   );
 };
-
-

@@ -1,7 +1,22 @@
 import { Input, Label, Button, Wrapper } from './Filter.styled';
 import { MdOutlineClear } from 'react-icons/md';
+import { findContact } from 'redux/filter/slice';
+import { selectFilter } from 'redux/selectors';
+import { useDispatch, useSelector } from 'react-redux';
 
-export const Filter = ({ filter, findContact, clearInput }) => {
+export const Filter = () => {
+  const filter = useSelector(selectFilter);
+  const dispatch = useDispatch();
+
+  const onInput = event => {
+    const searchName = event.target.value.toLowerCase();
+    dispatch(findContact(searchName));
+  };
+
+  const clearInput = () => {
+    dispatch(findContact(''));
+  };
+
   return (
     <Wrapper>
       <Label>
@@ -9,7 +24,7 @@ export const Filter = ({ filter, findContact, clearInput }) => {
         <Input
           type="text"
           value={filter}
-          onChange={findContact}
+          onChange={onInput}
           placeholder={'search'}
         />
         <Button onClick={clearInput}>
