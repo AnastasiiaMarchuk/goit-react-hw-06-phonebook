@@ -18,6 +18,10 @@ export const ContactList = () => {
   const noContactsMessage =
     "There are no entries in your phone book yet. It's time to add your first contact";
 
+  // filter && contacts.length === 0 && newList.length === 0
+  //   ? 'No contact with this name'
+  //   : "There are no entries in your phone book yet. It's time to add your first contact";
+
   return (
     <>
       <Wrapper />
