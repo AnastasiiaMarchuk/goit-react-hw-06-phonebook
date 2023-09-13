@@ -2,13 +2,11 @@ import React from 'react';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
-import { Button, Error, Form, Input, Label, Title } from './AddingForm.styled';
+import { Form, Title } from './AddingForm.styled';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { nanoid } from 'nanoid';
-import { useDispatch, useSelector } from 'react-redux';
-import { selectContacts } from 'redux/selectors';
-import { addContact } from 'redux/contacts/slice';
+import { useContacts } from 'redux/hooks';
 
 const schema = yup
   .object({
@@ -24,8 +22,7 @@ const schema = yup
   .required();
 
 export default function AddingForm() {
-  const contacts = useSelector(selectContacts);
-  const dispatch = useDispatch();
+  const { addContact, contacts } = useContacts();
 
   const {
     register,
@@ -37,8 +34,6 @@ export default function AddingForm() {
   });
 
   const onSubmit = newContact => {
-    const contact = { ...newContact, id: nanoid() };
-
     const oldContact = contacts.find(
       contact =>
         contact.name.toLowerCase() === newContact.name.toLowerCase() ||
@@ -52,7 +47,8 @@ export default function AddingForm() {
       return;
     }
 
-    dispatch(addContact(contact));
+    const contact = { ...newContact, id: nanoid() };
+    addContact(contact);
 
     toast.success('Contact added successfully', {
       position: 'top-right',
@@ -65,17 +61,17 @@ export default function AddingForm() {
     <>
       <Title>Add new contact</Title>
       <Form onSubmit={handleSubmit(onSubmit)}>
-        <Label>
+        <label>
           Name
-          <Input {...register('name')} placeholder="Enter name" />
-          {errors.name && <Error>Name is required</Error>}
-        </Label>
-        <Label>
+          <input {...register('name')} placeholder="Enter name" />
+          {errors.name && <span>Name is required</span>}
+        </label>
+        <label>
           Number
-          <Input {...register('number')} placeholder="xxx-xxx-xx-xx" />
-          {errors.number && <Error>Number is required</Error>}
-        </Label>
-        <Button type="submit">Add contact</Button>
+          <input {...register('number')} placeholder="xxx-xxx-xx-xx" />
+          {errors.number && <span>Number is required</span>}
+        </label>
+        <button type="submit">Add contact</button>
         <ToastContainer />
       </Form>
     </>

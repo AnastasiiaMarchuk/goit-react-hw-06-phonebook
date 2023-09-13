@@ -18,7 +18,7 @@ export const TitleWrapper = styled.div`
   }
 `;
 
-export const SearchSection = styled.section`
+export const SearchSection = styled.div`
   display: flex;
   gap: 30px;
 `;

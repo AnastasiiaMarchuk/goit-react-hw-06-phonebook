@@ -1,63 +1,48 @@
 import { FiTrash } from 'react-icons/fi';
 import { BsPersonCircle } from 'react-icons/bs';
-import {
-  Button,
-  Item,
-  LineWithShadow,
-  List,
-  Name,
-  Number,
-  TextMessage,
-  Title,
-  TitlesWrapper,
-} from './ContactList.styled';
-import { useDispatch, useSelector } from 'react-redux';
-import { selectContacts, selectFilter } from 'redux/selectors';
-import { removeContact } from 'redux/contacts/slice';
+import { List, Message, TitlesWrapper, Wrapper } from './ContactList.styled';
+import { useContacts, useFilter } from 'redux/hooks';
 
 export const ContactList = () => {
-  const dispatch = useDispatch();
-  const contacts = useSelector(selectContacts);
-  const filter = useSelector(selectFilter);
-
-  const noContactsMessage =
-    filter && contacts.length === 0
-      ? 'No contact with this name'
-      : "There are no entries in your phone book yet. It's time to add your first contact";
+  const { removeContact, contacts } = useContacts();
+  const { filter } = useFilter();
 
   const onRemoveContact = contactId => {
-    dispatch(removeContact(contactId));
+    removeContact(contactId);
   };
 
   const newList = contacts.filter(contact =>
     contact.name.toLowerCase().includes(filter)
   );
 
+  const noContactsMessage =
+    "There are no entries in your phone book yet. It's time to add your first contact";
+
   return (
     <>
-      <LineWithShadow />
+      <Wrapper />
       <TitlesWrapper>
-        <Title>Name</Title>
-        <Title>Number</Title>
+        <p>Name</p>
+        <p>Number</p>
       </TitlesWrapper>
-      <LineWithShadow />
+      <Wrapper />
       {contacts.length > 0 ? (
         <List>
           {newList.map(contact => {
             return (
-              <Item key={contact.id}>
+              <li key={contact.id}>
                 <BsPersonCircle size={21} color="#fff" />
-                <Name>{contact.name}</Name>
-                <Number>{contact.number}</Number>
-                <Button onClick={() => onRemoveContact(contact.id)}>
+                <p>{contact.name}</p>
+                <span>{contact.number}</span>
+                <button onClick={() => onRemoveContact(contact.id)}>
                   <FiTrash size={21} />
-                </Button>
-              </Item>
+                </button>
+              </li>
             );
           })}
         </List>
       ) : (
-        <TextMessage>{noContactsMessage}</TextMessage>
+        <Message>{noContactsMessage}</Message>
       )}
     </>
   );
