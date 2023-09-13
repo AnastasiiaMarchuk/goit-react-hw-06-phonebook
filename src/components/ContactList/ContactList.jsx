@@ -15,12 +15,9 @@ export const ContactList = () => {
     contact.name.toLowerCase().includes(filter)
   );
 
-  const noContactsMessage =
-    "There are no entries in your phone book yet. It's time to add your first contact";
-
-  // filter && contacts.length === 0 && newList.length === 0
-  //   ? 'No contact with this name'
-  //   : "There are no entries in your phone book yet. It's time to add your first contact";
+  const noContactsMessage = filter
+    ? 'No contact with this name'
+    : "There are no entries in your phone book yet. It's time to add your first contact";
 
   return (
     <>
@@ -30,7 +27,7 @@ export const ContactList = () => {
         <p>Number</p>
       </TitlesWrapper>
       <Wrapper />
-      {contacts.length > 0 ? (
+      {newList.length > 0 && (
         <List>
           {newList.map(contact => {
             return (
@@ -45,9 +42,8 @@ export const ContactList = () => {
             );
           })}
         </List>
-      ) : (
-        <Message>{noContactsMessage}</Message>
       )}
+      {!newList.length && <Message>{noContactsMessage}</Message>}
     </>
   );
 };
